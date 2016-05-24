@@ -5,7 +5,6 @@ module.exports = {
 
   build: [
     'babel',
-    'umd',
     'uglify'
   ],
 

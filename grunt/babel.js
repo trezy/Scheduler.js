@@ -1,7 +1,6 @@
 module.exports = {
   options: {
-    sourceMap: true,
-    presets: ['es2015']
+    sourceMap: true
   },
 
   dist: {
