@@ -1,7 +1,6 @@
 /*
-# Scheduler v3.0.0
+  # Scheduler v3.0.0
 */
-var Scheduler
 
 
 
@@ -15,12 +14,13 @@ var Scheduler
 
   This will kick off the `Scheduler`'s loop to constantly run tasks.
 */
-Scheduler = function Scheduler () {
-  this.paused = false
-  this.tasks = {}
-  this._startLoop = this._startLoop.bind(this)
-  this._startLoop()
-}
+export default class Scheduler {
+  constructor () {
+    this.paused = false
+    this.tasks = {}
+    this._startLoop = this._startLoop.bind(this)
+    this._startLoop()
+  }
 
 
 
@@ -49,44 +49,44 @@ Scheduler = function Scheduler () {
       * `framerate` (optional) is the speed at which the task should be run in
       frames per second (fps)
 */
-Scheduler.prototype.schedule = function schedule (id, task, options) {
-  var framerate
+  schedule (id, task, options) {
+    var framerate
 
-  if (typeof id !== 'string') {
-    options = task
-    task = id
-    id = Object.keys(this.tasks).length
+    if (typeof id !== 'string') {
+      options = task
+      task = id
+      id = Object.keys(this.tasks).length
+    }
+
+    options || (options = {})
+
+    this._debug = options.debug || false
+    this._frame = 0
+    framerate = Math.ceil(options.framerate || 60)
+
+    if (this._debug) {
+      console.log('Scheduling task', id)
+    }
+
+    if (framerate > 60) {
+      throw new RangeError('Framerate may not be higher than 60; Requested framerate is', framerate)
+      return
+    }
+
+    if (this.tasks[id]) {
+      throw new RangeError('A task with the ID "' + id + '" already exists')
+      return
+    }
+
+    this.tasks[id] = {
+      context: options.context || window,
+      paused: options.paused || false,
+      framerate: framerate,
+      task: task
+    }
+
+    return id
   }
-
-  options || (options = {})
-
-  this._debug = options.debug || false
-  this._frame = 0
-  framerate = Math.ceil(options.framerate || 60)
-
-  if (this._debug) {
-    console.log('Scheduling task', id)
-  }
-
-  if (framerate > 60) {
-    throw new RangeError('Framerate may not be higher than 60; Requested framerate is', framerate)
-    return
-  }
-
-  if (this.tasks[id]) {
-    throw new RangeError('A task with the ID "' + id + '" already exists')
-    return
-  }
-
-  this.tasks[id] = {
-    context: options.context || window,
-    paused: options.paused || false,
-    framerate: framerate,
-    task: task
-  }
-
-  return id
-}
 
 
 
@@ -97,14 +97,14 @@ Scheduler.prototype.schedule = function schedule (id, task, options) {
 
   Remove a task from our loop. `id` is ID of the task to be removed from this `Scheduler`.
 */
-Scheduler.prototype.unschedule = function schedule (id) {
-  if (this._debug) {
-    console.log('Unscheduling task', id)
-  }
+  unschedule (id) {
+    if (this._debug) {
+      console.log('Unscheduling task', id)
+    }
 
-  delete this.tasks[id]
-  return !this.tasks[id]
-}
+    delete this.tasks[id]
+    return !this.tasks[id]
+  }
 
 
 
@@ -116,13 +116,13 @@ Scheduler.prototype.unschedule = function schedule (id) {
   Remove all tasks from the `Scheduler`. We just overwrite the original array
   since this is a destructive operation.
 */
-Scheduler.prototype.clear = function schedule () {
-  if (this._debug) {
-    console.log('Clearing scheduler')
-  }
+  clear () {
+    if (this._debug) {
+      console.log('Clearing scheduler')
+    }
 
-  this.tasks = {}
-}
+    this.tasks = {}
+  }
 
 
 
@@ -133,17 +133,17 @@ Scheduler.prototype.clear = function schedule () {
 
   TODO: Describe
 */
-Scheduler.prototype.pause = function pause (id) {
-  if (this._debug) {
-    console.log('Pausing task', id || 'scheduler')
-  }
+  pause (id) {
+    if (this._debug) {
+      console.log('Pausing task', id || 'scheduler')
+    }
 
-  if (id) {
-    this.tasks[id].paused = true
-  } else {
-    this.paused = true
+    if (id) {
+      this.tasks[id].paused = true
+    } else {
+      this.paused = true
+    }
   }
-}
 
 
 
@@ -154,17 +154,17 @@ Scheduler.prototype.pause = function pause (id) {
 
   TODO: Describe
 */
-Scheduler.prototype.start = function start (id) {
-  if (this._debug) {
-    console.log('Starting', id || 'scheduler')
-  }
+  start (id) {
+    if (this._debug) {
+      console.log('Starting', id || 'scheduler')
+    }
 
-  if (id) {
-    this.tasks[id].paused = false
-  } else {
-    this.paused = false
+    if (id) {
+      this.tasks[id].paused = false
+    } else {
+      this.paused = false
+    }
   }
-}
 
 
 
@@ -175,9 +175,9 @@ Scheduler.prototype.start = function start (id) {
 
   Start the loop `requestAnimationFrame` loop for this `Scheduler`.
 */
-Scheduler.prototype._taskCaller = function _taskCaller (taskObject) {
-  taskObject.task.call(taskObject.context)
-}
+  _taskCaller (taskObject) {
+    taskObject.task.call(taskObject.context)
+  }
 
 
 
@@ -188,28 +188,28 @@ Scheduler.prototype._taskCaller = function _taskCaller (taskObject) {
 
   Start the loop `requestAnimationFrame` loop for this `Scheduler`.
 */
-Scheduler.prototype._startLoop = function _startLoop () {
-  var i, schedule, tasks
+  _startLoop () {
+    var i, schedule, tasks
 
-  schedule = this
-  tasks = Object.keys(this.tasks)
+    schedule = this
+    tasks = Object.keys(this.tasks)
 
-  requestAnimationFrame(schedule._startLoop)
+    requestAnimationFrame(schedule._startLoop)
 
-  if (!this.paused) {
-    for (i = 0; i < tasks.length; i++) {
-      var task
+    if (!this.paused) {
+      for (i = 0; i < tasks.length; i++) {
+        var task
 
-      task = this.tasks[tasks[i]]
+        task = this.tasks[tasks[i]]
 
-      if ((task['framerate'] === 60 || this._shouldRun(task['framerate'])) && !task.paused) {
-        this._taskCaller(task)
+        if ((task['framerate'] === 60 || this._shouldRun(task['framerate'])) && !task.paused) {
+          this._taskCaller(task)
+        }
       }
-    }
 
-    this._frame++
+      this._frame++
+    }
   }
-}
 
 
 
@@ -221,6 +221,7 @@ Scheduler.prototype._startLoop = function _startLoop () {
   Compares the passed in framerate against the current frame to determine if the
   task should run on this frame
 */
-Scheduler.prototype._shouldRun = function _shouldRun (framerate) {
-  return !(Math.floor(this._frame % (60 / framerate)))
+  _shouldRun (framerate) {
+    return !(Math.floor(this._frame % (60 / framerate)))
+  }
 }
