@@ -3,7 +3,7 @@ module.exports = {
     options: {
       amdModuleId: 'scheduler',
       objectToExport: 'Scheduler',
-      src: 'Scheduler.js',
+      src: 'dist/Scheduler.js',
       dest: 'dist/Scheduler.js'
     }
   }
