@@ -21,6 +21,8 @@
     "postinstall": "npm prune"
   },
   "devDependencies": {
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
     "chai": "latest",
     "grunt": "^0.4.5",
     "grunt-bump": "^0.3.1",
