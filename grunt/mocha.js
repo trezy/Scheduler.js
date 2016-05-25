@@ -1,7 +1,7 @@
 module.exports = {
   options: {
     mocha: {
-      ignoreLeaks: false
+      ignoreLeaks: true
     },
     run: true
   },

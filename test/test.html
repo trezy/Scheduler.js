@@ -5,8 +5,8 @@
 <script src="../dist/Scheduler.js"></script>
 
 <!-- Polyfills because PhantomJS sucks -->
-<script src="phantomPolyfills/bind.js"></script>
-<script src="phantomPolyfills/requestAnimationFrame.js"></script>
+<script src="./phantomPolyfills/bind.js"></script>
+<script src="./phantomPolyfills/requestAnimationFrame.js"></script>
 
 <!-- Testing libs -->
 <script src="../node_modules/mocha/mocha.js"></script>
@@ -17,11 +17,15 @@
 
 <!-- Mocha setup -->
 <script>
-  mocha.setup('bdd');
+  mocha.setup({
+    globals: ['Scheduler'],
+    ignoreLeaks: true,
+    ui: 'bdd'
+  });
 </script>
 
 <!-- Import the tests -->
-<script src="spec/Scheduler.js"></script>
+<script src="./Scheduler.spec.js"></script>
 
 <script>
   mocha.checkLeaks();
