@@ -1,7 +1,7 @@
 {
   "name": "Scheduler.js",
   "main": "dist/Scheduler.js",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "authors": [
     "Trezy <tre@trezy.com>"
   ],
